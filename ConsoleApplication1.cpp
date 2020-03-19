@@ -9,30 +9,37 @@ using namespace std;
 //ham check ten mien//
 bool check(string s) {
 	for (int i = 0; i < s.length(); i++) {
-		if (!((s[i]>='a'&&s[i]<='z')||(s[i]=='.')||(s[i]=='-')))
+		if (!((s[i]>='A' && s[i]<='Z')||(s[i]>='a'&&s[i]<='z')||(s[i]=='.')||(s[i]=='-')||(s[i]>='0'&&s[i]<='9')))
 			return 0;
 	};
 	return 1;
 }
 
 int main() {
-// khoi tao thu vien//
+	// khoi tao thu vien//
 	WSADATA wsa;
 	WSAStartup(MAKEWORD(2, 2), &wsa);
 
-	addrinfo* info;
-	SOCKADDR_IN addr;
 	string s;
 	cout << "nhap ten mien ";
 	getline(cin, s);
 	const char* str = s.c_str();
+
+	// phan giai ten mien//
+
+	addrinfo* info;
+	SOCKADDR_IN addr;
 	if (check(s)) {
-		int ret = getaddrinfo("hust.edu.vn", "http", NULL, &info);
+		int ret = getaddrinfo(str, "http", NULL, &info);
 		if (ret == 0)
 		{
-			memcpy(&addr, info->ai_addr, info->ai_addrlen);
-			cout << "Phan giai ten mien thanh cong\n";
-			cout << "dia chi ip :" << inet_ntoa(addr.sin_addr);
+			cout << "phan giai ten mien thanh cong!"<<endl;
+			addrinfo* point = info;
+			while (point != NULL) {
+				memcpy(&addr, point->ai_addr, point->ai_addrlen);
+				cout << "ip: " << inet_ntoa(addr.sin_addr) << endl;
+				point = point->ai_next;
+			}
 		}
 		else
 		{
